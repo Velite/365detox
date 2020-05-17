@@ -82,5 +82,5 @@ def db_init(recreate):
 		Delivery.add_item({"Date": "11.11.2015", "ContragentId": 3, "Positions": positions})
 		Delivery.add_item({"Date": "25.09.2015", "ContragentId": 3, "Positions": positions})
 	else:
-		User.edit_item({"Id": 1, "Name": "Andrey", "Login": "Velite", "Password": "umbraM93$567", "Role": "Admin"})
+		User.edit_item({"Id": 1, "Name": "Andrey", "Login": "Velite", "Password": "$567", "Role": "Admin"})
 		CommonName.update(Name = "Не указано").where(Ingredient.id == 1)
