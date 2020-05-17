@@ -21,7 +21,7 @@ def db_init(recreate):
 	Ingredient.init(recreate)
 	Shipment.init(recreate)
 	if recreate:
-		User.add_item({'Name': "Andrey", 'Login': "Velite", 'Password': "umbraM93$567", 'Role': "Admin"})
+		User.add_item({'Name': "Andrey", 'Login': "Velite", 'Password': "$567", 'Role': "Admin"})
 		User.add_item({'Name': "Olya", 'Login': "olya", 'Password': "12345", 'Role': "Admin"})
 		User.add_item({'Name': "User 1", 'Login': "user1", 'Password': "123", 'Role': "User"})
 
