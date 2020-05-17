@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="content-header clearfix">
+        <div class="pull-left">
+            <h2>{{ title }}</h2>
+        </div>
+    </div>
+    <div class="row col-sm-11">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="inputDate" class="col-xs-3 control-label">Дата</label>
+
+                <div class="col-xs-9">
+                    <div class="input-group date">
+                        <input type="text" class="form-control" id="inputDeliveryDate" data-bind="makeCalendar: Date"
+                               placeholder="Введите дату">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputContragent" class="col-xs-3 control-label">Контрагент</label>
+
+                <div class="col-xs-9">
+                    <select id="inputContragent" class="form-control"
+                            data-bind="options: Contragents, optionsText: 'Name', optionsValue: 'Id', value: ContragentId"></select>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <hr/>
+                    <div style="display: none" data-bind="visible: VisibleRowsCount() > 0">
+                        <div class="row" style="padding: 8px; border-bottom: solid 1px lightgray">
+                            <div class="col-xs-8"><strong>Номенклатура</strong></div>
+                            <div class="col-xs-3"><strong>Количество</strong></div>
+                        </div>
+                        <div data-bind="foreach: Positions()">
+                            <div class="row" style="padding: 8px; border-top: solid 1px lightgray; display: none"
+                                 data-bind="visible: !IsDeleted()">
+                                <div class="col-xs-8">
+                                    <div class="form-group form-group-sm"
+                                         style="margin-bottom: 0 !important; padding-right: 3px">
+                                        <select class="form-control"
+                                                data-bind="options: $root.Products, optionsText: 'Name', optionsValue: 'Id', optionsCaption: 'Выберите номенклатуру', value: ProductId"
+                                                title="Выберите номенклатуру"></select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="form-group form-group-sm"
+                                         style="margin-bottom: 0 !important; padding-left: 3px">
+                                        <input type="text" class="form-control" placeholder="Введите количество"
+                                               data-bind="value: Quantity">
+                                    </div>
+                                </div>
+                                <div class="col-xs-1">
+                                    {% if is_admin %}
+                                        <button class="btn btn-danger btn-sm btn-small" data-bind="click: Remove">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 10px">
+                        <button class="btn btn-sm btn-default" data-bind="click: Add">Добавить позицию</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <hr/>
+                    <button class="btn btn-success" data-bind="click: Save">Сохранить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/delivery_details.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("li#deliveries").addClass("active");
+            ko.applyBindings(new DeliveryModel({{ delivery|default([]) }}, {{ iscopy|default("false") }}, {{ products|default([]) }}, {{ contragents|default([]) }}));
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="content-header clearfix">
+        <div class="pull-left">
+            <h2>{{ title }}</h2>
+        </div>
+    </div>
+    <div class="row col-sm-11">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="inputName" class="col-sm-3 control-label">Название</label>
+
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputName" placeholder="Введите название"
+                           data-bind="value: Name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPosition" class="col-sm-3 control-label">Сортировка</label>
+
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputPosition"
+                           placeholder="Введите вес сортировки" data-bind="value: Position">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputBarcode" class="col-sm-3 control-label">Штрих-код</label>
+
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputBarcode"
+                           placeholder="Введите штрих-код" data-bind="value: Barcode">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputStartSale" class="col-xs-3 control-label">Дата начала продаж</label>
+
+                <div class="col-xs-9">
+                    <div class="input-group date">
+                        <input type="text" class="form-control" id="inputStartSale"
+                               placeholder="Введите дату начала продаж" data-bind="makeCalendar: StartSale">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <hr/>
+                    <div class="well well-sm" data-bind="text: currentPrice"></div>
+                    <div style="display: none" data-bind="visible: VisibleRowsCount() > 0">
+                        <div class="row" style="padding: 8px; border-bottom: solid 1px lightgray">
+                            <div class="col-xs-3"><strong>Цена</strong></div>
+                            <div class="col-xs-8"><strong>Дата</strong></div>
+                        </div>
+                        <div data-bind="foreach: Prices()">
+                            <div class="row" style="padding: 8px; border-top: solid 1px lightgray; display: none"
+                                 data-bind="css: {'bg-success': Active}, visible: !IsDeleted()">
+                                <div class="col-xs-3">
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><span class="glyphicon glyphicon-rub"
+                                                                             aria-hidden="true"></span></div>
+                                        <input type="text" class="form-control" placeholder="Введите цену"
+                                               data-bind="value: Price">
+                                    </div>
+                                </div>
+                                <div class="col-xs-8">
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control" id="inputStartSale"
+                                               placeholder="Введите дату"
+                                               data-bind="makeCalendar: Date">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-1">
+                                    {% if is_admin %}
+                                        <button class="btn btn-danger btn-sm btn-small" data-bind="click: Remove">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 10px">
+                        <button class="btn btn-sm btn-default" data-bind="click: Add">Добавить цену</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <hr/>
+                    <button class="btn btn-success" data-bind="click: Save">Сохранить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/product_details.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("li#products").addClass("active");
+            ko.applyBindings(new ProductModel({{ product|safe }}));
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div id="myWarning" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Подтверждение</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="warningBody"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <button id="deleteButton" type="button" class="btn btn-danger">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-header clearfix">
+        <div class="pull-left">
+            <h2>{{ title }}
+                <small data-bind="text: deliveries().length"></small>
+            </h2>
+        </div>
+        {% if is_admin %}
+            <div class="pull-right">
+                <a class="btn btn-sm btn-success" href="{{ url_for("deliveries.new") }}">Добавить</a>
+            </div>
+        {% endif %}
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover" style="display: none" data-bind="visible: deliveries().length > 0">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Дата</th>
+                <th>Контрагент</th>
+                <th>Кол-во товаров</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: deliveries">
+            <tr>
+                <td data-bind="text: Id"></td>
+                <td data-bind="text: Date"></td>
+                <td data-bind="text: Contragent"></td>
+                <td><span data-bind="text: Products().length, click: Popover"
+                          style="cursor: pointer; border-bottom: 1px dotted black"></span></td>
+                <td>
+                    {% if is_admin %}
+                        <div class="btn-group btn-group-xs">
+                            <a class="btn btn-default btn-sm btn-small"
+                               data-bind="attr: {href: '{{ url_for("deliveries.delivery_edit", delivery_id = -1) }}'.replace('-1', Id())}"
+                               title="Редактировать">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                            <a class="btn btn-default btn-sm btn-small"
+                               data-bind="attr: {href: '{{ url_for("deliveries.delivery_copy", delivery_id = -1) }}'.replace('-1', Id())}"
+                               title="Создать копию">
+                                <span class="glyphicon glyphicon-paste"></span>
+                            </a>
+                            <button class="btn btn-danger btn-sm btn-small" title="Удалить">
+                                <span class="glyphicon glyphicon-remove"
+                                      data-bind="click: $root.DeleteDelivery"></span>
+                            </button>
+                        </div>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr data-bind="visible: IsPopover" style="display: none">
+                <td colspan="4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-condensed">
+                            <thead>
+                            <tr>
+                                <th>Номенклатура</th>
+                                <th>Количество</th>
+                            </tr>
+                            </thead>
+                            <tbody data-bind="foreach: Products">
+                            <tr>
+                                <td data-bind="text: Name"></td>
+                                <td data-bind="text: Quantity"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/deliveries.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("li#deliveries").addClass("active");
+            ko.applyBindings(new DeliveriesModel({{ deliveries|default([]) }}));
+        });
+    </script>
+{% endblock %}

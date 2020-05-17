@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="content-header clearfix">
+        <div class="pull-left">
+            <h2>{{ title }}</h2>
+        </div>
+    </div>
+    {% if is_admin %}
+        {% if not headers %}
+            <form method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-sm-offset-1 form-group">
+                        <label for="importfile" class="col-xs-2 control-label">Выберите файл:</label>
+
+                        <div class="col-xs-6">
+                            <input type="file" name="importfile"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <hr/>
+                    <div class="col-sm-offset-1 form-group">
+                        <button type="submit" class="btn btn-success">Импортировать</button>
+                    </div>
+                </div>
+            </form>
+        {% else %}
+            <div class="content-header">
+                <p>Для импорта необходимо сопоставить колонки из файла параметрам номенклатуры</p>
+            </div>
+            <form class="form-horizontal">
+                <div class="row">
+                    <div class="col-sm-offset-1 form-group">
+                        <label for="nameInput" class="col-xs-2 control-label">Название:</label>
+
+                        <div class="col-xs-6">
+                            <select id="nameInput" class="form-control"
+                                    data-bind="options: products, optionsText: 'Name', optionsValue: 'Index', optionsCaption: 'Выберите колонку для параметра: Название', value: 'Name'"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-offset-1 form-group">
+                        <label for="barCodeInput" class="col-xs-2 control-label">Штрих-код:</label>
+
+                        <div class="col-xs-6">
+                            <select id="barCodeInput" class="form-control"
+                                    data-bind="options: products, optionsText: 'Name', optionsValue: 'Index', optionsCaption: 'Выберите колонку для параметра: Штрих-код', value: 'Name'"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-offset-1 form-group">
+                        <label for="dateInput" class="col-xs-2 control-label">Дата начала продаж:</label>
+
+                        <div class="col-xs-6">
+                            <select id="dateInput" class="form-control"
+                                    data-bind="options: products, optionsText: 'Name', optionsValue: 'Index', optionsCaption: 'Выберите колонку для параметра: Дата начала продаж', value: 'Name'"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-offset-1 form-group">
+                        <label for="positionInput" class="col-xs-2 control-label">Позиция отображения:</label>
+
+                        <div class="col-xs-6">
+                            <select id="positionInput" class="form-control"
+                                    data-bind="options: products, optionsText: 'Name', optionsValue: 'Index', optionsCaption: 'Выберите колонку для параметра: Позиция отображения', value: 'Name'"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <hr/>
+                    <div class="col-sm-offset-1">
+                        <button class="btn btn-success" data-bind="click: Import">
+                            Импортировать
+                        </button>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/products_import.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("li#products").addClass("active");
+            ko.applyBindings(new ProductsImportModel({{ headers|default([]) }}));
+        });
+    </script>
+{% endblock %}

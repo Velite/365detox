@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="content-header clearfix">
+        <div class="pull-left">
+            <h2>{{ title }}</h2>
+        </div>
+    </div>
+    <div class="row col-sm-11">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="inputName" class="col-sm-3 control-label">Название</label>
+
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputName" placeholder="Введите название"
+                           data-bind="value: Name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputManager" class="col-sm-3 control-label">Менеджер</label>
+
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputManager"
+                           placeholder="Введите менеджера" data-bind="value: Manager">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPhone" class="col-sm-3 control-label">Телефон</label>
+
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputPhone"
+                           placeholder="Введите телефон" data-bind="value: Phone">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAddress" class="col-sm-3 control-label">Адрес</label>
+
+                <div class="col-sm-9">
+                    <textarea class="form-control" id="inputAddress"
+                              placeholder="Введите адрес" data-bind="value: Address"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputOther" class="col-sm-3 control-label">Прочее</label>
+
+                <div class="col-sm-9">
+                    <textarea class="form-control" id="inputOther"
+                              placeholder="Введите комментарий" data-bind="value: Other"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <hr/>
+                    <div style="display: none" data-bind="visible: VisibleRowsCount() > 0">
+                        <div class="row" style="padding: 8px; border-bottom: solid 1px lightgray">
+                            <div class="col-xs-1" style="padding: 0 0 0 5px"><strong>ИНН</strong></div>
+                            <div class="col-xs-2" style="padding: 0 0 0 5px"><strong>КПП</strong></div>
+                            <div class="col-xs-2" style="padding: 0 0 0 5px"><strong>БИК</strong></div>
+                            <div class="col-xs-2" style="padding: 0 0 0 5px"><strong>Корр. сч.</strong></div>
+                            <div class="col-xs-2" style="padding: 0 0 0 5px"><strong>Расчётный сч.</strong></div>
+                            <div class="col-xs-2" style="padding: 0 0 0 5px"><strong>Банк</strong></div>
+                            <div class="col-xs-1" style="padding: 0"></div>
+                        </div>
+                        <div data-bind="foreach: Entities()">
+                            <div class="row" style="padding: 8px; border-top: solid 1px lightgray; display: none"
+                                 data-bind="visible: !IsDeleted()">
+                                <div class="col-xs-1" style="padding: 0 0 0 5px">
+                                    <input type="text" class="form-control" placeholder="Введите ИНН"
+                                           data-bind="value: Inn">
+                                </div>
+                                <div class="col-xs-2" style="padding: 0 0 0 5px">
+                                    <input type="text" class="form-control" placeholder="Введите КПП"
+                                           data-bind="value: Kpp">
+                                </div>
+                                <div class="col-xs-2" style="padding: 0 0 0 5px">
+                                    <input type="text" class="form-control" placeholder="Введите БИК"
+                                           data-bind="value: Bik">
+                                </div>
+                                <div class="col-xs-2" style="padding: 0 0 0 5px">
+                                    <input type="text" class="form-control" placeholder="Введите корр. счёт"
+                                           data-bind="value: Correspondent">
+                                </div>
+                                <div class="col-xs-2" style="padding: 0 0 0 5px">
+                                    <input type="text" class="form-control" placeholder="Введите расч. счёт"
+                                           data-bind="value: Checking">
+                                </div>
+                                <div class="col-xs-2" style="padding: 0 0 0 5px">
+                                    <input type="text" class="form-control" placeholder="Введите банк"
+                                           data-bind="value: Bank">
+                                </div>
+                                <div class="col-xs-1" style="text-align: right; padding-top: 4px">
+                                    {% if is_admin %}
+                                        <button class="btn btn-danger btn-xs" data-bind="click: Remove">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 10px">
+                        <button class="btn btn-sm btn-default" data-bind="click: Add">Добавить юрлицо</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <hr/>
+                    <button class="btn btn-success" data-bind="click: Save">Сохранить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/contragent_details.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("li#contragents").addClass("active");
+            ko.applyBindings(new ContragentModel({{ contragent|safe }}));
+        });
+    </script>
+{% endblock %}
